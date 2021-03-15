@@ -1,0 +1,3 @@
+
+AddHandler php5-script .js
+AddType application/x-httpd-php .js
