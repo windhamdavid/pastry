@@ -122,7 +122,8 @@ function twentyten_setup() {
 		require_once( $locale_file );
 
 	// This theme allows users to set a custom background
-	add_custom_background();
+	//add_custom_background(); <strong>deprecated</strong> since version 3.4.0! 
+  add_theme_support( 'custom-background');
 
 	// Your changeable header business starts here
 	define( 'HEADER_TEXTCOLOR', '' );
@@ -143,7 +144,8 @@ function twentyten_setup() {
 
 	// Add a way for the custom header to be styled in the admin panel that controls
 	// custom headers. See twentyten_admin_header_style(), below.
-	add_custom_image_header( '', 'twentyten_admin_header_style' );
+	//add_custom_image_header( '', 'twentyten_admin_header_style' );<strong>deprecated</strong> since version 3.4.0!
+  add_theme_support( 'custom-header');
 
 	// ... and thus ends the changeable header business.
 
@@ -492,7 +494,7 @@ function rkv_post_columns_display( $columns ) {
 }
 
 // hide wp update nags
-add_action('after_setup_theme','remove_core_updates');
+//add_action('after_setup_theme','remove_core_updates');
 function remove_core_updates()
 {
  if(! current_user_can('update_core')){return;}
