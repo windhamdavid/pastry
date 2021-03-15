@@ -30,10 +30,9 @@
 			wp_title( '' ); echo ' | '; bloginfo( 'name' ); twentyten_the_page_number();
 		}
 	?></title>
-	<link rel="profile" href="http://gmpg.org/xfn/11" />
 	<link rel="stylesheet" type="text/css" media="all" href="<?php bloginfo( 'stylesheet_url' ); ?>" />
 	<?php if ( is_singular() ) wp_enqueue_script( 'comment-reply' ); ?>
-	<link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>" />
+  <link rel="shortcut icon" type="image/x-icon" href="<?php echo home_url();?>/favicon.ico" />
 	<?php wp_enqueue_script("jquery"); ?>
 	<?php wp_head(); ?>
 

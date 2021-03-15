@@ -1,28 +1,57 @@
 <?php
+
 function head_scripts() {
-    $scriptdir_start = "\t";
-	$scriptdir_start .= '<script type="text/javascript" src="';
-    $scriptdir_start .= get_bloginfo('template_directory');
-    $scriptdir_start .= '/js/';
-    $scriptdir_end = '"></script>';
-    $scripts .= $scriptdir_start . 'ui.js' . $scriptdir_end . "\n";
-    print apply_filters('head_scripts', $scripts);
+  wp_enqueue_script('ui', get_template_directory_uri() . '/js/ui.js', array('jquery'), true, true );
 }
 add_action('wp_head','head_scripts');
 
 
-remove_action('wp_head', 'rsd_link');
+add_action( 'init', 'dwp23_cleaner_header' );
+function dwp23_cleaner_header() {
+remove_action('wp_head', 'index_rel_link' );
+remove_action('wp_head', 'rel_canonical');
+remove_action('wp_head', 'start_post_rel_link', 10);
+remove_action('wp_head', 'adjacent_posts_rel_link_wp_head', 10);
+remove_action('wp_head', 'wp_shortlink_wp_head', 10);
+remove_action('wp_head', 'parent_post_rel_link', 10);
 remove_action('wp_head', 'wlwmanifest_link');
 remove_action('wp_head', 'wp_generator');
-remove_action( 'wp_head', 'feed_links_extra', 3 );
-remove_action( 'wp_head', 'feed_links', 2 );
-remove_action( 'wp_head', 'index_rel_link' ); 
-remove_action( 'wp_head', 'parent_post_rel_link', 10, 0 );
-remove_action( 'wp_head', 'start_post_rel_link', 10, 0 ); 
-remove_action( 'wp_head', 'adjacent_posts_rel_link', 10, 0 );
+remove_action('wp_head', 'feed_links_extra', 3 );
+remove_action('wp_head', 'feed_links', 2 );
+}
+
+add_action( 'init', 'dwp23_disable_emojis' );
+function dwp23_disable_emojis() {
+	remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
+	remove_action( 'admin_print_scripts', 'print_emoji_detection_script' );
+	remove_action( 'wp_print_styles', 'print_emoji_styles' );
+	remove_action( 'admin_print_styles', 'print_emoji_styles' );
+	remove_filter( 'the_content_feed', 'wp_staticize_emoji' );
+	remove_filter( 'comment_text_rss', 'wp_staticize_emoji' );
+	remove_filter( 'wp_mail', 'wp_staticize_emoji_for_email' );
+	add_filter( 'emoji_svg_url', '__return_false' );
+}
 
 remove_action('init', 'wp_admin_bar_init');
 add_action( 'show_admin_bar', '__return_false' );
+
+add_action( 'after_setup_theme', 'dwp23_disable_xmlrpc' );
+function dwp23_disable_xmlrpc() {
+  remove_action('wp_head', 'rsd_link');
+  add_filter( 'xmlrpc_enabled', '__return_false' );
+  add_filter( 'wp_headers', function($headers) {
+    unset( $headers['X-Pingback'] );
+    return $headers;
+  });
+}
+
+add_action( 'after_setup_theme', 'dwp23_disable_api' );
+function dwp23_disable_api() {
+  remove_action('wp_head', 'rest_output_link_wp_head', 10);
+  remove_action('template_redirect', 'rest_output_link_header', 11, 0);
+  remove_action('wp_head', 'wp_oembed_add_discovery_links', 10);
+  remove_action('wp_head', 'wp_oembed_add_host_js', 10);
+}
 
 /**
  * TwentyTen functions and definitions
